@@ -1,0 +1,34 @@
+head {
+background-color: #192734;
+}
+
+.newpostform{
+margin-top: 10px;
+}
+
+body{
+  overflow-y: auto;
+  background-color: #192734;
+}
+
+textarea {
+    max-height: 100px;
+}
+
+#submitbutton{
+  margin-left: 10px;
+}
+
+.newpostform{
+  min-height: 50px;
+  max-width: 100%;
+  margin: 10px;
+}
+
+.card-body{
+  background-color: #657786;
+}
+
+.card-footer{
+  background-color: #AAB8C2;
+}

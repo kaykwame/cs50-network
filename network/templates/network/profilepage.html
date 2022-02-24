@@ -1,0 +1,67 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+  {% if user.is_authenticated %}
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          {% if currentuser.username == poster %}
+            <div class="newpostform">
+              <form action="{% url 'newpost' %}" method="POST">
+                  {% csrf_token %}
+                  {{ form.as_p|safe }}
+                  <input type="submit" class="btn btn-sm btn-primary submitbutton"  value = "Submit"/>
+              </form>
+            </div>
+          {% endif %}
+        <br>
+
+        <p style="color: white;">Number of followers <b>{{otheruser}}</b> has: {{followers}}</p>
+        <p style="color: white;">Number of people <b>{{otheruser}}</b> follows: {{followees}}</p>
+
+        {% if user.is_authenticated and currentuser.username != poster %}
+          {% if currentuser.username != request.user and follow_status == "True" %}
+              <button onclick="location.href='{% url 'unfollow' userid=otheruser.id %}'" class="btn btn-sm btn-outline-primary" id="inbox">Unfollow</button>
+          {% else %}
+              <button onclick="location.href='{% url 'follow' userid=otheruser.id %}'" class="btn btn-sm btn-outline-primary" id="inbox">Follow</button>
+          {% endif %}
+        {% endif %}
+
+        <div id="posts-view">
+          {% for post in posts %}
+            <div class="card card-signin my-5">
+              <div class="card-body" id="post{{post.id}}" style="background-color: #97CAEF;">
+                <a href="{% url 'profilepage' poster=post.Poster %}" style="color: black;"><b>{{post.Poster}}</b></a>
+                <br><br>
+                <p>{{post.Post_content}}</p>
+                <small class="text-muted"><p>{{post.Date_posted}}</p></small>
+                {% if user.is_authenticated and post.Poster == currentuser %}
+                  <button class="btn btn-primary editpost">Edit Post</button>
+                {% endif %}
+              </div>
+              <div class="card-footer" id="" style="background-color: #AAB8C2;">
+                <button class="btn btn-white mr-3 like" id="btn{{ post.id }}">
+                  <div id="kwame{{ post.id }}">
+                    <div id="{{ post.id }}">
+                      {% if post in liked_post %}
+                        <a href="{% url 'post-like' %}" style="color: red" id="unlikebtn" onclick="likepost(event)">Unlike</a> Likes: {{post.likes.count}}
+                      {% else %}
+                        <a href="{% url 'post-like' %}" style="color: green" id="likebtn" onclick="likepost(event)">Like</a> Likes: {{post.likes.count}}
+                      {% endif %}
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block script %}
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="{% static 'network/network.js' %}"></script>
+{% endblock %}

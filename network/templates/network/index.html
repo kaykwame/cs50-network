@@ -1,0 +1,25 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+  {% if user.is_authenticated %}
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="newpostform">
+            <form action="{% url 'newpost' %}" method="POST">
+                {% csrf_token %}
+                {{ form.as_p|safe }}
+                <input type="submit" class="btn btn-primary submitbutton"  value = "Submit"/>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block script %}
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="{% static 'network/network.js' %}"></script>
+{% endblock %}

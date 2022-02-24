@@ -1,0 +1,75 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+  {% if user.is_authenticated %}
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div id="following-view">
+
+          </div>
+          <div class="newpostform">
+            <form action="{% url 'newpost' %}" method="POST">
+                {% csrf_token %}
+                {{ form.as_p|safe }}
+                <input type="submit" class="btn btn-primary submitbutton"  value = "Submit"/>
+            </form>
+          </div>
+
+          <div id="posts-view">
+            {% for post in posts %}
+              <div class="card card-signin my-5">
+                <div class="card-body" id="post{{post.id}}" style="background-color: #97CAEF;">
+                  <a href="{% url 'profilepage' poster=post.Poster_username %}" style="color: black;"><b>{{post.Poster_username}}</b></a>
+                  <br><br>
+                  <p>{{post.Post_content}}</p>
+                  <small class="text-muted"><p>{{post.Date_posted}}</p></small>
+                  {% if post.Poster_username == user %}
+                    <button class="btn btn-primary editpost">Edit Post</button>
+                  {% endif %}
+                </div>
+                <div class="card-footer" id="" style="background-color: #AAB8C2;">
+                  <button class="btn btn-white mr-3 like" id="btn{{ post.id }}">
+                    <div id="kwame{{ post.id }}">
+                      <div id="{{ post.id }}">
+                        {% if post in liked_post %}
+                          <a href="{% url 'post-like' %}" style="color: red" id="unlikebtn" onclick="likepost(event)">Unlike</a> Likes: {{post.likes.count}}
+                        {% else %}
+                          <a href="{% url 'post-like' %}" style="color: green" id="likebtn" onclick="likepost(event)">Like</a> Likes: {{post.likes.count}}
+                        {% endif %}
+                      </div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="button-view">
+            <div class="pagination">
+              <span class="step-links">
+                  {% if page_obj.has_previous %}
+                      <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                  {% endif %}
+
+                  <span class="current">
+                    {{ page_obj.number }}
+                  </span>
+
+                  {% if page_obj.has_next %}
+                      <a href="?page={{ page_obj.next_page_number }}">next</a>
+                  {% endif %}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block script %}
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="{% static 'network/network.js' %}"></script>
+{% endblock %}
